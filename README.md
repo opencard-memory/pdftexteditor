@@ -1,2 +1,0 @@
-# pdftexteditor
-PDF Text Editor
