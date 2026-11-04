@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -22,10 +21,10 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       working-directory: ./PdfTextEditor
-      run: dotnet restore
+      run: dotnet restore -p:EnableWindowsTargeting=true
     - name: Build
       working-directory: ./PdfTextEditor
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore -p:EnableWindowsTargeting=true
     - name: Test
       working-directory: ./PdfTextEditor
       run: dotnet test --no-build --verbosity normal
