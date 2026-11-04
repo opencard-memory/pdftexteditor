@@ -1,25 +1,45 @@
-name: Unzip PdfTextEditor-i18n
+name: Unzip to Repository
 
 on:
   push:
-    branches: [ main ]  # main 브랜치에 코드가 올라올 때 실행
-  workflow_dispatch:     # 깃허브 웹사이트에서 수동으로 버튼 눌러 실행 가능
+    branches: [ main ]  # main 브랜치에 코드가 push되면 실행
+  workflow_dispatch:     # 깃허브 웹 화면에서 수동 실행 버튼 활성화
+
+# 깃허브 Actions가 내 저장소에 파일을 새로 쓸 수 있도록 권한 부여
+permissions:
+  contents: write
 
 jobs:
-  unzip-process:
-    runs-on: ubuntu-latest  # 우분투 환경
+  unzip-and-commit:
+    runs-on: ubuntu-latest
 
     steps:
-    # 1. 깃허브 저장소의 파일들을 러너 환경으로 가져옴
+    # 1. 내 저장소의 파일들을 가져오기
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 2. 압축 해제할 폴더를 만들고 압축 풀기
-    - name: Extract PdfTextEditor-i18n.zip
+    # 2. PdfTextEditor-i18n.zip 파일 압축 해제
+    # (여기서는 리포지토리 최상단 루트 디렉토리에 바로 풀도록 설정했습니다)
+    - name: Extract zip file
       run: |
-        mkdir -p ./extracted_files
-        unzip -q "PdfTextEditor-i18n.zip" -d ./extracted_files
+        unzip -q "PdfTextEditor-i18n.zip" -d .
 
-    # 3. (확인용) 압축이 잘 풀렸는지 폴더 안의 파일 목록 출력
-    - name: Check Extracted Files
-      run: ls -lh ./extracted_files
+    # 3. 원본 zip 파일은 저장소에서 지우고 싶다면 아래 한 줄 주석(#)을 해제하세요
+    # - name: Remove original zip
+    #   run: rm "PdfTextEditor-i18n.zip"
+
+    # 4. 풀린 파일들을 내 깃허브 리포지토리에 Commit & Push 하기
+    - name: Commit and Push changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        git add .
+        
+        # 변경된(압축 해제된) 파일이 있을 때만 커밋 수행 (에러 방지)
+        if ! git diff --cached --quiet; then
+          git commit -m "chore: Extract PdfTextEditor-i18n.zip"
+          git push
+        else
+          echo "No changes to commit"
+        fi
