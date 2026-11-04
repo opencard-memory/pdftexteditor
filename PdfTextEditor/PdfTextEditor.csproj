@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- Windows.Data.Pdf(WinRT)로 PDF를 렌더링하므로 Windows SDK TFM 사용 -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>PdfTextEditor</RootNamespace>
+    <AssemblyName>PdfTextEditor</AssemblyName>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <Product>PDF 편집기</Product>
+    <Description>Acrobat 스타일 PDF 텍스트·페이지 편집기</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- iText: 콘텐츠 스트림 분석, 폰트 임베딩, PDF 재작성 (AGPL / 상용 이중 라이선스) -->
+    <PackageReference Include="itext" Version="9.*" />
+    <PackageReference Include="itext.bouncy-castle-adapter" Version="9.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Resource Include="Assets\app.ico" />
+    <Resource Include="Assets\app-icon.png" />
+  </ItemGroup>
+
+</Project>
