@@ -1,0 +1,25 @@
+name: Unzip PdfTextEditor-i18n
+
+on:
+  push:
+    branches: [ main ]  # main 브랜치에 코드가 올라올 때 실행
+  workflow_dispatch:     # 깃허브 웹사이트에서 수동으로 버튼 눌러 실행 가능
+
+jobs:
+  unzip-process:
+    runs-on: ubuntu-latest  # 우분투 환경
+
+    steps:
+    # 1. 깃허브 저장소의 파일들을 러너 환경으로 가져옴
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # 2. 압축 해제할 폴더를 만들고 압축 풀기
+    - name: Extract PdfTextEditor-i18n.zip
+      run: |
+        mkdir -p ./extracted_files
+        unzip -q "PdfTextEditor-i18n.zip" -d ./extracted_files
+
+    # 3. (확인용) 압축이 잘 풀렸는지 폴더 안의 파일 목록 출력
+    - name: Check Extracted Files
+      run: ls -lh ./extracted_files
